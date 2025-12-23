@@ -16,8 +16,12 @@ if %errorlevel% neq 0 (
 :: -mwindows: Creates a GUI application (no console window)
 :: -I src: Adds the src directory to include path (fixes missing header issue)
 :: -DUNICODE -D_UNICODE: Enables Unicode support in Windows headers
+:: Compile resources
+C:\MinGW\bin\windres.exe src/resource.rc -o src/resource.o
+
 :: -municode: Tells the linker to use wWinMain as the entry point
-g++ -I src -DUNICODE -D_UNICODE src/main.cpp src/gui.cpp src/clicker.cpp -o AutoClicker.exe -static -mwindows -municode
+:: -lcomctl32: Links the Common Controls library
+g++ -I src -DUNICODE -D_UNICODE src/main.cpp src/gui.cpp src/clicker.cpp src/resource.o -o AutoClicker.exe -static -mwindows -municode -lcomctl32
 
 if %errorlevel% equ 0 (
     echo Build successful! Run AutoClicker.exe to start.
