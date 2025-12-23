@@ -14,6 +14,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         RegisterHotKey(hwnd, ID_HOTKEY_F6, 0, VK_F6);
         break;
 
+    case WM_CTLCOLORSTATIC:
+    {
+        HDC hdcStatic = (HDC)wParam;
+        SetBkColor(hdcStatic, RGB(255, 255, 255));
+        SetBkMode(hdcStatic, TRANSPARENT);
+        return (INT_PTR)GetStockObject(WHITE_BRUSH);
+    }
+
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
         case ID_BTN_START:
@@ -82,9 +90,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     hwnd = CreateWindowEx(
         WS_EX_CLIENTEDGE,
         L"AutoClickerClass",
-        L"OP Auto Clicker Clone",
+        L"OSS Auto Clicker v0.1 Beta",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT, 500, 320,
+        CW_USEDEFAULT, CW_USEDEFAULT, 520, 320,
         NULL, NULL, hInstance, NULL);
 
     if (hwnd == NULL) {
