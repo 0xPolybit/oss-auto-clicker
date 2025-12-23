@@ -1,0 +1,4 @@
+#include <windows.h>
+
+// ID for the manifest (CREATEPROCESS_MANIFEST_RESOURCE_ID is 1)
+1 24 "AutoClicker.manifest"
