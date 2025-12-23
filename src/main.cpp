@@ -1,5 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <commctrl.h>
 #include "common.h"
 #include "gui.h"
 #include "clicker.h"
@@ -50,6 +51,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
+    // Initialize Common Controls (for modern look)
+    INITCOMMONCONTROLSEX icex;
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_WIN95_CLASSES | ICC_STANDARD_CLASSES;
+    InitCommonControlsEx(&icex);
+
     WNDCLASSEX wc;
     HWND hwnd;
     MSG Msg;
