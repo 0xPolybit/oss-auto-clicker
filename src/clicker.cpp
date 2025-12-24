@@ -68,6 +68,10 @@ void AutoClicker::ClickThread() {
     int count = 0;
 
     while (running) {
+        if (!currentSettings.useCurrentLocation) {
+            SetCursorPos(currentSettings.x, currentSettings.y);
+        }
+
         PerformClick(currentSettings.mouseButton, currentSettings.clickType);
         
         count++;
