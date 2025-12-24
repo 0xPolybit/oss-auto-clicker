@@ -90,7 +90,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     hwnd = CreateWindowEx(
         WS_EX_CLIENTEDGE,
         L"AutoClickerClass",
-        L"OSS Auto Clicker v0.1 Beta",
+        L"OSS Auto Clicker v0.2 Beta",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
         CW_USEDEFAULT, CW_USEDEFAULT, 520, 400,
         NULL, NULL, hInstance, NULL);
