@@ -82,7 +82,7 @@ void CreateControls(HWND hwnd) {
         240, 90, 255, 100, hwnd, NULL, NULL, NULL);
     SendMessage(hGroup3, WM_SETFONT, (WPARAM)hFont, TRUE);
 
-    HWND hRadio1 = CreateWindow(L"BUTTON", L"Repeat", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+    HWND hRadio1 = CreateWindow(L"BUTTON", L"Repeat", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
         250, 115, 70, 20, hwnd, (HMENU)ID_RADIO_REPEAT, NULL, NULL);
     SendMessage(hRadio1, WM_SETFONT, (WPARAM)hFont, TRUE);
     HWND hEditRepeat = CreateWindow(L"EDIT", L"1", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER, 
@@ -103,13 +103,45 @@ void CreateControls(HWND hwnd) {
     // Select "Repeat until stopped" by default
     CheckRadioButton(hwnd, ID_RADIO_REPEAT, ID_RADIO_UNTILSTOP, ID_RADIO_UNTILSTOP);
 
+    // --- Cursor Position Group ---
+    HWND hGroup4 = CreateWindow(L"BUTTON", L"Cursor Position", WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
+        10, 200, 485, 80, hwnd, NULL, NULL, NULL);
+    SendMessage(hGroup4, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+    HWND hRadioCurrent = CreateWindow(L"BUTTON", L"Current Location", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
+        20, 225, 130, 20, hwnd, (HMENU)ID_RADIO_CURSOR_CURRENT, NULL, NULL);
+    SendMessage(hRadioCurrent, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+    HWND hRadioPick = CreateWindow(L"BUTTON", L"Pick Location", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        160, 225, 110, 20, hwnd, (HMENU)ID_RADIO_CURSOR_PICK, NULL, NULL);
+    SendMessage(hRadioPick, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+    // Default to Current Location
+    CheckRadioButton(hwnd, ID_RADIO_CURSOR_CURRENT, ID_RADIO_CURSOR_PICK, ID_RADIO_CURSOR_CURRENT);
+
+    HWND hStaticX = CreateWindow(L"STATIC", L"X:", WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE, 280, 225, 20, 20, hwnd, NULL, NULL, NULL);
+    SendMessage(hStaticX, WM_SETFONT, (WPARAM)hFont, TRUE);
+    HWND hEditX = CreateWindow(L"EDIT", L"0", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER, 300, 225, 60, 23, hwnd, (HMENU)ID_EDIT_X, NULL, NULL);
+    SendMessage(hEditX, WM_SETFONT, (WPARAM)hFont, TRUE);
+    HWND hUpDnX = CreateWindow(UPDOWN_CLASS, NULL, WS_CHILD | WS_VISIBLE | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
+    SendMessage(hUpDnX, UDM_SETBUDDY, (WPARAM)hEditX, 0);
+    SendMessage(hUpDnX, UDM_SETRANGE, 0, MAKELPARAM(9999, 0));
+
+    HWND hStaticY = CreateWindow(L"STATIC", L"Y:", WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE, 370, 225, 20, 20, hwnd, NULL, NULL, NULL);
+    SendMessage(hStaticY, WM_SETFONT, (WPARAM)hFont, TRUE);
+    HWND hEditY = CreateWindow(L"EDIT", L"0", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER, 390, 225, 60, 23, hwnd, (HMENU)ID_EDIT_Y, NULL, NULL);
+    SendMessage(hEditY, WM_SETFONT, (WPARAM)hFont, TRUE);
+    HWND hUpDnY = CreateWindow(UPDOWN_CLASS, NULL, WS_CHILD | WS_VISIBLE | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
+    SendMessage(hUpDnY, UDM_SETBUDDY, (WPARAM)hEditY, 0);
+    SendMessage(hUpDnY, UDM_SETRANGE, 0, MAKELPARAM(9999, 0));
+
     // --- Action Buttons ---
     HWND hBtnStart = CreateWindow(L"BUTTON", L"Start (F6)", WS_CHILD | WS_VISIBLE, 
-        50, 210, 160, 50, hwnd, (HMENU)ID_BTN_START, NULL, NULL);
+        50, 300, 160, 50, hwnd, (HMENU)ID_BTN_START, NULL, NULL);
     SendMessage(hBtnStart, WM_SETFONT, (WPARAM)hFont, TRUE);
 
     HWND hBtnStop = CreateWindow(L"BUTTON", L"Stop (F6)", WS_CHILD | WS_VISIBLE, 
-        290, 210, 160, 50, hwnd, (HMENU)ID_BTN_STOP, NULL, NULL);
+        290, 300, 160, 50, hwnd, (HMENU)ID_BTN_STOP, NULL, NULL);
     SendMessage(hBtnStop, WM_SETFONT, (WPARAM)hFont, TRUE);
     EnableWindow(hBtnStop, FALSE);
 }
@@ -130,6 +162,11 @@ ClickerSettings GetSettingsFromGUI(HWND hwnd) {
     
     GetDlgItemText(hwnd, ID_EDIT_REPEAT_COUNT, buffer, 16);
     s.repeatCount = _wtoi(buffer);
+
+    // Cursor Position
+    s.useCurrentLocation = (IsDlgButtonChecked(hwnd, ID_RADIO_CURSOR_CURRENT) == BST_CHECKED);
+    GetDlgItemText(hwnd, ID_EDIT_X, buffer, 16); s.x = _wtoi(buffer);
+    GetDlgItemText(hwnd, ID_EDIT_Y, buffer, 16); s.y = _wtoi(buffer);
 
     return s;
 }
