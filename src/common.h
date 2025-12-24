@@ -18,6 +18,12 @@
 #define ID_BTN_STOP         111
 #define ID_HOTKEY_F6        112
 
+// Cursor Position IDs
+#define ID_RADIO_CURSOR_CURRENT 113
+#define ID_RADIO_CURSOR_PICK    114
+#define ID_EDIT_X               115
+#define ID_EDIT_Y               116
+
 // Settings Structure
 struct ClickerSettings {
     int hours;
@@ -28,6 +34,11 @@ struct ClickerSettings {
     int clickType;   // 0=Single, 1=Double
     bool repeatUntilStopped;
     int repeatCount;
+    
+    // Cursor Position
+    bool useCurrentLocation; // true = Current, false = Specific
+    int x;
+    int y;
 };
 
 #endif
