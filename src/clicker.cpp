@@ -1,5 +1,6 @@
 #include "clicker.h"
 #include <iostream>
+#include <chrono>
 
 AutoClicker::AutoClicker() : running(false) {}
 
@@ -16,6 +17,7 @@ void AutoClicker::Start(ClickerSettings settings) {
 
 void AutoClicker::Stop() {
     running = false;
+    cv.notify_all();
     if (workerThread.joinable()) {
         workerThread.join();
     }
@@ -58,9 +60,9 @@ void AutoClicker::PerformClick(int btn, int type) {
 }
 
 void AutoClicker::ClickThread() {
-    long long intervalMs = (currentSettings.hours * 3600000) +
-                           (currentSettings.minutes * 60000) +
-                           (currentSettings.seconds * 1000) +
+    long long intervalMs = (static_cast<long long>(currentSettings.hours) * 3600000) +
+                           (static_cast<long long>(currentSettings.minutes) * 60000) +
+                           (static_cast<long long>(currentSettings.seconds) * 1000) +
                            currentSettings.milliseconds;
     
     if (intervalMs < 1) intervalMs = 1; // Safety minimum
@@ -80,7 +82,8 @@ void AutoClicker::ClickThread() {
             break;
         }
 
-        // Simple sleep (in a real app, use a condition variable for better responsiveness on stop)
-        Sleep(static_cast<DWORD>(intervalMs));
+        // Interruptible sleep
+        std::unique_lock<std::mutex> lk(cv_m);
+        cv.wait_for(lk, std::chrono::milliseconds(intervalMs), [this]{ return !running; });
     }
 }
